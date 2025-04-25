@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x]  # You can also use 20.x or 22.x if your app supports it
+        node-version: [22.x]  # You can also use 20.x or 22.x if your app supports it
 
     steps:
     - uses: actions/checkout@v3

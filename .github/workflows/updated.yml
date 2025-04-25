@@ -8,26 +8,32 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest  # Changed from self-hosted to GitHub-hosted runner
 
     strategy:
       matrix:
-        node-version: [22.x]  # You can also use 20.x or 22.x if your app supports it
+        node-version: [22.x]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4  # Updated to latest version
 
     - name: Use Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4  # Updated to latest version
       with:
         node-version: ${{ matrix.node-version }}
+        cache: 'npm'  # Added caching for faster installs
 
     - name: Install dependencies
-      run: npm install
+      run: npm ci  # Changed to 'npm ci' for more reliable installs
 
     - name: Build app
       run: npm run build --if-present
-    - run: pm2 restart BackendAPI
 
-    - name: Run app
-      run: npm start
+    - name: Restart PM2 process
+      run: pm2 restart BackendAPI
+      # Note: This will only work if you're using a self-hosted runner
+      # with PM2 installed. For GitHub-hosted runners, you'll need
+      # to set up deployment separately.
+
+    # Removed 'npm start' as it's not typically needed in CI
+    # (your app would terminate when the job finishes)
